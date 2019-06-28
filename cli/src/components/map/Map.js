@@ -81,6 +81,7 @@ const Map = ({ classes }) => {
       setErrors({ error: "There has been an error retrieving memories" });
     }
   };
+
   // call to get user's memories
   useEffect(() => {
     getMeMemories();
@@ -91,11 +92,9 @@ const Map = ({ classes }) => {
     };
   }, []);
 
-  // check if user is boarding first time and if so render the dialog box
+  // set boarding to true if user is newly-registered
   useEffect(() => {
-    if (state.user.boarding === 0) {
-      setBoarding(true);
-    }
+    if (state.user.boarding === 0) setBoarding(true);
   }, [state.user.boarding]);
 
   // set specific memory upon click on a pin on map
@@ -149,16 +148,16 @@ const Map = ({ classes }) => {
   const handleDialogCloseClick = async () => {
     // set boarding to false
     await setBoarding(false);
-    // immute user info with boarding increased
+    // get user with boarding update and set it to local state
     dispatch({
       type: "SET_USER",
       payload: {
+        name: state.user.name,
         avatar: state.user.avatar,
-        boarding: state.user.boarding + 1,
         exp: state.user.exp,
         iat: state.user.iat,
         id: state.user.id,
-        name: state.user.name
+        boarding: state.user.boarding + 1
       }
     });
   };
