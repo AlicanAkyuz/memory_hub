@@ -91,7 +91,7 @@ const Map = ({ classes }) => {
     };
   }, []);
 
-  // check if user is boarding first time
+  // check if user is boarding first time and if so render the dialog box
   useEffect(() => {
     if (state.user.boarding === 0) {
       setBoarding(true);
@@ -143,6 +143,24 @@ const Map = ({ classes }) => {
         console.log(errors);
       }
     }
+  };
+
+  // upon dialog close for boarding users
+  const handleDialogCloseClick = async () => {
+    // set boarding to false
+    await setBoarding(false);
+    // immute user info with boarding increased
+    dispatch({
+      type: "SET_USER",
+      payload: {
+        avatar: state.user.avatar,
+        boarding: state.user.boarding + 1,
+        exp: state.user.exp,
+        iat: state.user.iat,
+        id: state.user.id,
+        name: state.user.name
+      }
+    });
   };
 
   // return circularprogress until loading is set to false
@@ -273,7 +291,7 @@ const Map = ({ classes }) => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setBoarding(false)} color="secondary">
+              <Button onClick={handleDialogCloseClick} color="secondary">
                 Got it
               </Button>
             </DialogActions>
