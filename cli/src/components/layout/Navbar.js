@@ -89,11 +89,13 @@ const NavBar = ({ page, classes }) => {
 
         <FriendRequests />
 
-        <Avatar
-          alt={user.name}
-          src={profile && profile.image ? profile.image : user.avatar}
-          className={mobileSize ? classes.avatarMobile : classes.avatar}
-        />
+        <Link className={classes.logo} to="/profile">
+          <Avatar
+            alt={user.name}
+            src={profile && profile.image ? profile.image : user.avatar}
+            className={mobileSize ? classes.avatarMobile : classes.avatar}
+          />
+        </Link>
 
         <SignOut />
       </Toolbar>

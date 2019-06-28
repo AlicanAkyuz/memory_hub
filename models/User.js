@@ -17,6 +17,9 @@ const UserSchema = new Schema({
   avatar: {
     type: String
   },
+  boarding: {
+    type: Number
+  },
   date: {
     type: Date,
     default: Date.now

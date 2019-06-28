@@ -49,6 +49,7 @@ router.post("/register", async (req, res) => {
         name: req.body.name,
         email: req.body.email,
         avatar,
+        boarding: 0,
         password: req.body.password
       });
 
@@ -100,9 +101,21 @@ router.post("/login", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  // find user by email
+  // find user by email and if found, return a token
   try {
     const user = await User.findOne({ email });
+
+    // update user's boarding count
+    try {
+      const boardingUpdated = await User.findOneAndUpdate(
+        { _id: user._id },
+        { $set: { boarding: user.boarding + 1 } },
+        { new: true }
+      );
+    } catch (err) {
+      errors.boarding = "There has been a problem with boarding";
+      return res.status(404).json(errors);
+    }
 
     if (!user) {
       errors.email = "Email not found";
@@ -114,7 +127,12 @@ router.post("/login", async (req, res) => {
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
         // create jwt payload
-        const payload = { id: user.id, name: user.name, avatar: user.avatar };
+        const payload = {
+          id: user.id,
+          name: user.name,
+          avatar: user.avatar,
+          boarding: user.boarding
+        };
 
         // sign jwt token and send it to client
         jwt.sign(

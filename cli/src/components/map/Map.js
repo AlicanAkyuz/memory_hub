@@ -5,6 +5,11 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
 import { withStyles } from "@material-ui/core/styles";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { unstable_useMediaQuery as useMediaQuery } from "@material-ui/core/useMediaQuery";
 
 import withRoot from "../../withRoot";
@@ -38,6 +43,7 @@ const Map = ({ classes }) => {
   const [popup, setPopup] = useState(null);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
+  const [boarding, setBoarding] = useState(false);
 
   // get user's current position
   useEffect(() => {
@@ -84,6 +90,13 @@ const Map = ({ classes }) => {
       dispatch({ type: "SET_PIN", payload: null });
     };
   }, []);
+
+  // check if user is boarding first time
+  useEffect(() => {
+    if (state.user.boarding === 0) {
+      setBoarding(true);
+    }
+  }, [state.user.boarding]);
 
   // set specific memory upon click on a pin on map
   const handleSelectPin = async pin => {
@@ -242,6 +255,30 @@ const Map = ({ classes }) => {
         >
           {state.currentPin || state.draft ? <Blog /> : null}
         </div>
+
+        {/* Dialog section */}
+        {loading ? null : (
+          <Dialog open={boarding} onClose={() => setBoarding(false)}>
+            <DialogTitle>{"Welcome To Memory Hub"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                This is where you can create your own memories. To get started,
+                click anywhere on the map and share your memory with the rest of
+                the world. In the end, you will see your memories as orange pins
+                on the map.
+                <br />
+                <br />
+                When you see green pins on the map, click on them to discover
+                other people's memories all around the world.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setBoarding(false)} color="secondary">
+                Got it
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </div>
     </div>
   );
