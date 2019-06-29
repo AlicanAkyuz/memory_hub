@@ -41,7 +41,7 @@ const Map = ({ classes }) => {
   const [viewport, setViewport] = useState(viewportVal);
   const [userPosition, setUserPosition] = useState(INITIAL_VIEWPORT);
   const [popup, setPopup] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState(false);
   const [loading, setLoading] = useState(true);
   const [boarding, setBoarding] = useState(false);
 
