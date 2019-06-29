@@ -28,10 +28,10 @@ router.get(
         res.json({});
       }
 
-      // update loginCount on Profile
+      // update userActivityCount on Profile
       const countIncreased = await Profile.findOneAndUpdate(
         { user: req.user.id },
-        { $set: { loginCount: profile.loginCount + 1 } },
+        { $set: { userActivityCount: profile.userActivityCount + 1 } },
         { new: true }
       );
 

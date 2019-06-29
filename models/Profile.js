@@ -47,7 +47,7 @@ const ProfileSchema = new Schema({
       }
     }
   ],
-  loginCount: {
+  userActivityCount: {
     type: Number
   },
   date: {

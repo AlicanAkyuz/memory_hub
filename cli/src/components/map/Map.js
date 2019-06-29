@@ -94,7 +94,15 @@ const Map = ({ classes }) => {
 
   // set boarding to true if user is newly-registered
   useEffect(() => {
-    if (state.user.boarding === 0) setBoarding(true);
+    const getUserProfile = async () => {
+      try {
+        const { data } = await axios.get("/profile");
+        if (data.userActivityCount === 1) setBoarding(true);
+      } catch (err) {
+        console.log("error");
+      }
+    };
+    getUserProfile();
   }, []);
 
   // set specific memory upon click on a pin on map
@@ -148,8 +156,6 @@ const Map = ({ classes }) => {
   const handleDialogCloseClick = async () => {
     // set boarding to false
     setBoarding(false);
-    const { data } = await axios.get("/users/current");
-    dispatch({ type: "SET_USER", payload: data });
   };
 
   // return circularprogress until loading is set to false
@@ -264,7 +270,8 @@ const Map = ({ classes }) => {
         </div>
 
         {/* Dialog section */}
-        {loading ? null : (
+
+        {boarding && !loading ? (
           <Dialog open={boarding} onClose={() => handleDialogCloseClick()}>
             <DialogTitle>{"Welcome To Memory Hub"}</DialogTitle>
             <DialogContent>
@@ -288,7 +295,7 @@ const Map = ({ classes }) => {
               </Button>
             </DialogActions>
           </Dialog>
-        )}
+        ) : null}
       </div>
     </div>
   );

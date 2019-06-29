@@ -74,7 +74,7 @@ router.post("/register", async (req, res) => {
                 instagram: "",
                 friends: [],
                 friendRequests: [],
-                loginCount: 0
+                userActivityCount: 0
               };
 
               const profile = new Profile(profileFields).save();
