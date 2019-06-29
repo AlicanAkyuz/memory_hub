@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 // cross origin resource sharing
 const corsOptions = {
-  origin: port,
+  origin: "https://memoryhub.site/",
   optionsSuccessStatus: 200
 };
 
