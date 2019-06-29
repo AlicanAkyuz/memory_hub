@@ -78,7 +78,7 @@ const Map = ({ classes }) => {
         setLoading(false);
       }
     } catch (err) {
-      setErrors({ error: "There has been an error retrieving memories" });
+      setErrors(true);
     }
   };
 
@@ -99,7 +99,7 @@ const Map = ({ classes }) => {
         const { data } = await axios.get("/profile");
         if (data.userActivityCount === 1) setBoarding(true);
       } catch (err) {
-        console.log("error");
+        setErrors(true);
       }
     };
     getUserProfile();
@@ -145,10 +145,7 @@ const Map = ({ classes }) => {
         getMeMemories();
       }
     } catch (err) {
-      if (err.response) {
-        setErrors(err.response.data);
-        console.log(errors);
-      }
+      setErrors(true);
     }
   };
 
@@ -164,6 +161,25 @@ const Map = ({ classes }) => {
       <div style={{ height: "calc(100vh - 64px)" }}>
         <NavBar page="map" />
         <Loading />
+      </div>
+    );
+  }
+
+  // return circularprogress until loading is set to false
+  if (errors) {
+    return (
+      <div
+        style={{
+          height: "calc(100vh - 64px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <NavBar page="map" />
+        <p style={{ color: "#fff", fontSize: "45px", fontFamily: "Roboto" }}>
+          There has been a problem, please try to log in again.
+        </p>
       </div>
     );
   }
