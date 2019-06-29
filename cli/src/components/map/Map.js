@@ -95,7 +95,7 @@ const Map = ({ classes }) => {
   // set boarding to true if user is newly-registered
   useEffect(() => {
     if (state.user.boarding === 0) setBoarding(true);
-  }, [state.user.boarding]);
+  }, []);
 
   // set specific memory upon click on a pin on map
   const handleSelectPin = async pin => {
@@ -147,19 +147,9 @@ const Map = ({ classes }) => {
   // upon dialog close for boarding users
   const handleDialogCloseClick = async () => {
     // set boarding to false
-    await setBoarding(false);
-    // get user with boarding update and set it to local state
-    dispatch({
-      type: "SET_USER",
-      payload: {
-        name: state.user.name,
-        avatar: state.user.avatar,
-        exp: state.user.exp,
-        iat: state.user.iat,
-        id: state.user.id,
-        boarding: state.user.boarding + 1
-      }
-    });
+    setBoarding(false);
+    const { data } = await axios.get("/users/current");
+    dispatch({ type: "SET_USER", payload: data });
   };
 
   // return circularprogress until loading is set to false
@@ -182,7 +172,7 @@ const Map = ({ classes }) => {
       >
         <ReactMapGL
           width="100%"
-          height={mobileSize ? "calc(100vh - 57px)" : "calc(100vh - 64px)"}
+          height={mobileSize ? "calc(80vh - 57px)" : "calc(100vh - 64px)"}
           mapStyle="mapbox://styles/mapbox/dark-v10"
           mapboxApiAccessToken="pk.eyJ1IjoiYWxpY2FuLWFreXV6IiwiYSI6ImNqdWV0YmZnbTA3NHk0Ym1mOHV0MzRrM2sifQ.2_XSjPYwun5Fux9EpoCdBw"
           scrollZoom={!mobileSize}
@@ -275,7 +265,7 @@ const Map = ({ classes }) => {
 
         {/* Dialog section */}
         {loading ? null : (
-          <Dialog open={boarding} onClose={() => setBoarding(false)}>
+          <Dialog open={boarding} onClose={() => handleDialogCloseClick()}>
             <DialogTitle>{"Welcome To Memory Hub"}</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -290,7 +280,10 @@ const Map = ({ classes }) => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleDialogCloseClick} color="secondary">
+              <Button
+                onClick={() => handleDialogCloseClick()}
+                color="secondary"
+              >
                 Got it
               </Button>
             </DialogActions>

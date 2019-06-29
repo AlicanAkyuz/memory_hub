@@ -27,6 +27,14 @@ router.get(
       if (!profile) {
         res.json({});
       }
+
+      // update loginCount on Profile
+      const countIncreased = await Profile.findOneAndUpdate(
+        { user: req.user.id },
+        { $set: { loginCount: profile.loginCount + 1 } },
+        { new: true }
+      );
+
       res.json(profile);
     } catch (err) {
       errors.noprofile = "There has been a problem with fetching user";

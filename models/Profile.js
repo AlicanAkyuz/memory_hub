@@ -47,6 +47,9 @@ const ProfileSchema = new Schema({
       }
     }
   ],
+  loginCount: {
+    type: Number
+  },
   date: {
     type: Date,
     default: Date.now

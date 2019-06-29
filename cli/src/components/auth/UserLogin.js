@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -30,12 +31,11 @@ const UserLogin = ({ classes }) => {
       // when successfully logged in, set token to localStorage and future request headers
       if (response.data.success) {
         const { token } = response.data;
-        localStorage.setItem("jwt_token", token);
+        await localStorage.setItem("jwt_token", token);
         AuthToken(token);
-        const decoded_user = jwt_decode(token);
-        // set auth and user info to state
+        const decoded = jwt_decode(token);
         dispatch({ type: "AUTH", payload: true });
-        dispatch({ type: "SET_USER", payload: decoded_user });
+        dispatch({ type: "SET_USER", payload: decoded });
       } else {
         const err = {
           err: "There has been a problem with logging in"

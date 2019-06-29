@@ -49,7 +49,6 @@ router.post("/register", async (req, res) => {
         name: req.body.name,
         email: req.body.email,
         avatar,
-        boarding: 0,
         password: req.body.password
       });
 
@@ -74,10 +73,13 @@ router.post("/register", async (req, res) => {
                 facebook: "",
                 instagram: "",
                 friends: [],
-                friendRequests: []
+                friendRequests: [],
+                loginCount: 0
               };
 
               const profile = new Profile(profileFields).save();
+
+              // send back user obj with boarding set to previous value
               res.json(user);
             })
             .catch(err => console.log({ newUserError: err }));
@@ -105,18 +107,6 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    // update user's boarding count
-    try {
-      const boardingUpdated = await User.findOneAndUpdate(
-        { _id: user._id },
-        { $set: { boarding: user.boarding + 1 } },
-        { new: true }
-      );
-    } catch (err) {
-      errors.boarding = "There has been a problem with boarding";
-      return res.status(404).json(errors);
-    }
-
     if (!user) {
       errors.email = "Email not found";
       return res.status(404).json(errors);
@@ -130,8 +120,7 @@ router.post("/login", async (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
-          avatar: user.avatar,
-          boarding: user.boarding
+          avatar: user.avatar
         };
 
         // sign jwt token and send it to client
@@ -170,8 +159,7 @@ router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    const user = await User.findOne({ email: req.user.email });
-
+    const user = await User.findOne({ _id: req.user.id });
     res.json(user);
   }
 );

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -38,12 +39,11 @@ const Register = ({ classes }) => {
           // when successfully logged in, set token to localStorage and future request headers
           if (res.data.success) {
             const { token } = res.data;
-            localStorage.setItem("jwt_token", token);
-            AuthToken(token);
-            const decoded_user = jwt_decode(token);
-            // set auth and user info to state
+            await localStorage.setItem("jwt_token", token);
+            await AuthToken(token);
+            const decoded = jwt_decode(token);
             dispatch({ type: "AUTH", payload: true });
-            dispatch({ type: "SET_USER", payload: decoded_user });
+            dispatch({ type: "SET_USER", payload: decoded });
             // clear signup state
             dispatch({ type: "SIGNUP_CLICK" });
           } else {
