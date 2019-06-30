@@ -16,16 +16,6 @@ const keys = require("../config/keys");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
 
-// @route   GET /users/wakeup
-// @desc    route to wake application up
-// @access  public
-router.get("/wakeup", async (req, res) => {
-  const obj = {
-    msg: "Memory Hub has just woken up :)"
-  };
-  res.json(obj);
-});
-
 // @route   POST /users/register
 // @desc    register a user if not already exists
 // @access  public
